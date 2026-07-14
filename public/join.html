@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<title>Word Arena — игра</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23538d4e'/><text x='50' y='72' font-size='62' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>W</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <span class="logo"><span class="tile-w">W</span>Word Arena</span>
+  <span class="spacer"></span>
+  <span id="top-status" class="status-chip" hidden></span>
+  <span id="top-code" class="room-chip"></span>
+</header>
+
+<!-- ============ NICKNAME ============ -->
+<section id="view-name" class="center-panel">
+  <h2>Присоединиться к игре</h2>
+  <p class="muted">Введите имя — его увидят остальные участники.</p>
+  <div style="max-width:320px;margin:24px auto 0">
+    <input id="name-input" class="field" maxlength="20" autocomplete="off" placeholder="Ваше имя">
+    <button id="btn-join" class="btn">Играть</button>
+    <p id="name-error" class="error-msg"></p>
+  </div>
+</section>
+
+<!-- ============ LOBBY ============ -->
+<section id="view-lobby" class="center-panel" hidden>
+  <h2><span class="pulse-dot"></span>Ждём начала игры</h2>
+  <p class="muted">Ведущий запустит раунд, когда все соберутся.</p>
+  <div class="chips" id="lobby-players"></div>
+</section>
+
+<!-- ============ GAME ============ -->
+<section id="view-game" hidden>
+  <div class="rivals" id="rivals"></div>
+  <div class="game-layout">
+    <div class="board-wrap"><div class="board" id="board"></div></div>
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<div id="results-overlay" class="overlay" hidden>
+  <div class="modal">
+    <h2 id="results-title">Итоги раунда</h2>
+    <p class="muted">Загаданное слово:</p>
+    <div class="word-reveal" id="reveal-word"></div>
+    <ol class="lb" id="lb-list"></ol>
+    <p class="muted" id="results-wait"><span class="pulse-dot"></span>Ведущий может запустить новый раунд — оставайтесь на странице</p>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/board.js"></script>
+<script src="/js/play.js"></script>
+</body>
+</html>
