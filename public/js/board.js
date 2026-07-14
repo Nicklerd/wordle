@@ -103,3 +103,102 @@ const WA = (() => {
         btn.className = 'key' + (k.length > 1 ? ' wide' : '');
         btn.textContent = KEY_LABELS[k] || k;
         btn.dataset.key = k;
+        btn.addEventListener('click', () => onKey(k));
+        row.appendChild(btn);
+        keyEls[k] = btn;
+      }
+      el.appendChild(row);
+    }
+    return keyEls;
+  }
+
+  /** Upgrade key colors: absent < present < correct, never downgrade. */
+  function paintKeys(keyEls, letters, pattern) {
+    letters.forEach((ch, i) => {
+      const key = keyEls[ch];
+      if (!key) return;
+      const next = pattern[i];
+      const cur = key.dataset.state;
+      if (!cur || STATE_RANK[next] > STATE_RANK[cur]) key.dataset.state = next;
+    });
+  }
+
+  /* ---------- mini boards (rivals / admin) ---------- */
+
+  function miniBoardHTML(rowsHTMLBuilder) {
+    let html = '<div class="mini-board">';
+    for (let r = 0; r < MAX_ROWS; r++) {
+      html += '<div class="mini-row">';
+      for (let c = 0; c < WORD_LENGTH; c++) html += rowsHTMLBuilder(r, c);
+      html += '</div>';
+    }
+    return html + '</div>';
+  }
+
+  /** Colors only — what rivals see. */
+  function rivalBoardHTML(patterns) {
+    return miniBoardHTML((r, c) => {
+      const state = patterns[r] ? patterns[r][c] : '';
+      return `<span class="mini-tile ${state}"></span>`;
+    });
+  }
+
+  /** Letters + colors — what the host sees. */
+  function fullBoardHTML(guesses) {
+    return miniBoardHTML((r, c) => {
+      const g = guesses[r];
+      const state = g ? g.pattern[c] : '';
+      const ch = g ? g.word[c] : '';
+      return `<span class="mini-tile ${state}">${ch}</span>`;
+    });
+  }
+
+  /* ---------- misc ---------- */
+
+  function avatarHTML(nickname, hue, size) {
+    const initial = (nickname || '?').trim()[0].toUpperCase();
+    const s = size ? `width:${size}px;height:${size}px;font-size:${Math.round(size * .46)}px;` : '';
+    return `<span class="avatar" style="background:hsl(${hue} 55% 45%);${s}">${initial}</span>`;
+  }
+
+  function fmtTime(ms) {
+    if (ms == null) return '';
+    const s = Math.round(ms / 1000);
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+  }
+
+  let toastEl;
+  function toast(msg, ms = 1400) {
+    if (!toastEl) {
+      toastEl = document.createElement('div');
+      toastEl.className = 'toast-stack';
+      document.body.appendChild(toastEl);
+    }
+    const t = document.createElement('div');
+    t.className = 'toast';
+    t.textContent = msg;
+    toastEl.prepend(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 350); }, ms);
+  }
+
+  const ERRORS = {
+    bad_length: 'Недостаточно букв',
+    bad_chars: 'Используйте буквы нужного языка',
+    not_in_dict: 'Слова нет в словаре',
+    not_active: 'Игра ещё не началась',
+    already_done: 'Вы уже закончили',
+    not_found: 'Игра не найдена',
+    name_taken: 'Имя уже занято',
+    bad_name: 'Введите имя',
+    full: 'Комната заполнена',
+    finished: 'Игра уже завершена',
+    bad_state: 'Недоступно в текущем состоянии',
+  };
+
+  return {
+    WORD_LENGTH, MAX_ROWS, FLIP_MS, STAGGER_MS, LETTER_RE, ERRORS,
+    buildBoard, setTile, revealRow, bounceRow, shakeRow,
+    buildKeyboard, paintKeys,
+    rivalBoardHTML, fullBoardHTML, avatarHTML, fmtTime, toast,
+  };
+})();
