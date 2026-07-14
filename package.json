@@ -1,0 +1,18 @@
+{
+  "name": "word-arena",
+  "version": "1.0.0",
+  "description": "Competitive multiplayer Wordle with QR join and real-time spectating",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
