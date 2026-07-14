@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Word Arena — соревновательный Wordle</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='18' fill='%23538d4e'/><text x='50' y='72' font-size='62' font-weight='bold' text-anchor='middle' fill='white' font-family='Arial'>W</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <span class="logo"><span class="tile-w">W</span>Word Arena</span>
+  <span class="spacer"></span>
+  <span id="top-status" class="status-chip" hidden></span>
+  <span id="top-code" class="room-chip" hidden></span>
+</header>
+
+<!-- ============ LANDING ============ -->
+<section id="view-landing" class="landing">
+  <div class="demo-row" id="demo-row"></div>
+  <h1>Соревновательный Wordle для компании</h1>
+  <p class="sub">Ведущий загадывает слово · участники сканируют QR · прогресс всех виден в реальном времени</p>
+
+  <div class="cards">
+    <div class="card">
+      <h2>Создать игру</h2>
+      <p class="hint">Вы — ведущий. Загадайте слово из 5 букв (русское или английское), покажите QR участникам и следите за всеми досками.</p>
+      <input id="secret-input" class="field word" maxlength="5" autocomplete="off"
+             placeholder="Загаданное слово">
+      <label class="check">
+        <input type="checkbox" id="validate-check" checked>
+        Проверять слова игроков по словарю
+      </label>
+      <button id="btn-create" class="btn">Создать игру</button>
+      <p id="create-error" class="error-msg"></p>
+    </div>
+
+    <div class="card">
+      <h2>Присоединиться</h2>
+      <p class="hint">Есть код игры? Введите его — или просто отсканируйте QR у ведущего.</p>
+      <input id="code-input" class="field code" maxlength="4" autocomplete="off"
+             placeholder="КОД">
+      <button id="btn-goto-join" class="btn secondary">Войти в игру</button>
+      <p id="join-error" class="error-msg"></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ADMIN ============ -->
+<section id="view-admin" class="admin-wrap" hidden>
+  <aside class="qr-panel">
+    <div class="code-big" id="admin-code"></div>
+    <img id="qr-img" alt="QR для входа в игру">
+    <a class="join-url" id="join-url" target="_blank"></a>
+    <div class="secret-badge" id="secret-badge" title="Загаданное слово (видите только вы)"></div>
+    <div class="admin-actions">
+      <button id="btn-start" class="btn">▶ Начать игру</button>
+      <button id="btn-end" class="btn danger" hidden>Завершить игру</button>
+      <button id="btn-new-round" class="btn secondary" hidden>Новый раунд</button>
+    </div>
+  </aside>
+
+  <div class="players-panel" id="admin-players">
+    <div class="empty-hint">Пока никто не подключился.<br>Покажите QR-код участникам 👆</div>
+  </div>
+</section>
+
+<!-- ============ NEW ROUND MODAL ============ -->
+<div id="round-overlay" class="overlay" hidden>
+  <div class="modal">
+    <h2>Новый раунд</h2>
+    <p class="muted">Игроки останутся в комнате, доски очистятся.</p>
+    <input id="round-word" class="field word" maxlength="5" autocomplete="off" placeholder="Новое слово">
+    <p id="round-error" class="error-msg"></p>
+    <button id="btn-round-go" class="btn">Загадать и вернуть в лобби</button>
+    <button id="btn-round-cancel" class="btn secondary">Отмена</button>
+  </div>
+</div>
+
+<!-- ============ RESULTS MODAL (admin) ============ -->
+<div id="results-overlay" class="overlay" hidden>
+  <div class="modal">
+    <h2>Итоги раунда</h2>
+    <div class="word-reveal" id="reveal-word"></div>
+    <ol class="lb" id="lb-list"></ol>
+    <button id="btn-results-new-round" class="btn">Новый раунд</button>
+    <button id="btn-results-close" class="btn secondary">Закрыть</button>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/board.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
