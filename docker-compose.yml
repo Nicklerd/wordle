@@ -1,0 +1,12 @@
+services:
+  word-arena:
+    build: .
+    container_name: word-arena
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - words:/app/words   # словари скачаются один раз и переживут пересборки
+
+volumes:
+  words:
